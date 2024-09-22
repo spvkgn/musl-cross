@@ -2,6 +2,7 @@ name: Build
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   build:
@@ -11,28 +12,28 @@ jobs:
       fail-fast: true
       matrix:
         target:
-          - aarch64-unknown-linux-musl
-          - arm-unknown-linux-musleabi
-          - arm-unknown-linux-musleabihf
-          - armv7-unknown-linux-musleabi
-          - armv7-unknown-linux-musleabihf
-          - loongarch64-unknown-linux-musl
-          - m68k-unknown-linux-musl
-          - microblazeel-xilinx-linux-musl
-          - microblaze-xilinx-linux-musl
-          - mipsel-unknown-linux-musl
-          - mipsel-unknown-linux-muslsf
-          - mips-unknown-linux-musl
-          - mips-unknown-linux-muslsf
-          - mips64el-unknown-linux-musl
-          - mips64-unknown-linux-musl
-          - powerpc-unknown-linux-musl
-          - powerpc64-unknown-linux-musl
+          # - aarch64-unknown-linux-musl
+          # - arm-unknown-linux-musleabi
+          # - arm-unknown-linux-musleabihf
+          # - armv7-unknown-linux-musleabi
+          # - armv7-unknown-linux-musleabihf
+          # - loongarch64-unknown-linux-musl
+          # - m68k-unknown-linux-musl
+          # - microblazeel-xilinx-linux-musl
+          # - microblaze-xilinx-linux-musl
+          # - mipsel-unknown-linux-musl
+          # - mipsel-unknown-linux-muslsf
+          # - mips-unknown-linux-musl
+          # - mips-unknown-linux-muslsf
+          # - mips64el-unknown-linux-musl
+          # - mips64-unknown-linux-musl
+          # - powerpc-unknown-linux-musl
+          # - powerpc64-unknown-linux-musl
           - riscv32-unknown-linux-musl
           - riscv64-unknown-linux-musl
-          - s390x-ibm-linux-musl
-          - sh-multilib-linux-musl
-          - x86_64-multilib-linux-musl
+          # - s390x-ibm-linux-musl
+          # - sh-multilib-linux-musl
+          # - x86_64-multilib-linux-musl
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,7 +56,7 @@ jobs:
     permissions:
       contents: write
     env:
-      tag_name: latest
+      tag_name: 'linux-5.10'
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -83,7 +84,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           fail_on_unmatched_files: true
-          prerelease: false
+          prerelease: true
           draft: false
           tag_name: ${{ env.tag_name }}
           name: ${{ env.DATE }}
