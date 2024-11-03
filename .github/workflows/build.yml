@@ -67,7 +67,7 @@ jobs:
         run: |
           find ./release -type f -name '*.tar.xz' -exec mv {} . \;
           rm -rf release
-          printf "| %s | %s |\n" File "sha256 checksum" --- --- > body.txt
+          printf "| %s | %s |\n" Filename "sha256sum" --- --- > body.txt
           for i in *.tar.xz ; do
             printf "| %s | %s |\n" "$i" $(sha256sum $i | awk '{print $1}') >> body.txt
           done
