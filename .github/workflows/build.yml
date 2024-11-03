@@ -16,6 +16,7 @@ jobs:
           - arm-unknown-linux-musleabihf
           - armv7-unknown-linux-musleabi
           - armv7-unknown-linux-musleabihf
+          - i686-w64-mingw32
           - loongarch64-unknown-linux-musl
           - m68k-unknown-linux-musl
           - microblazeel-xilinx-linux-musl
@@ -33,6 +34,7 @@ jobs:
           - s390x-ibm-linux-musl
           - sh-multilib-linux-musl
           - x86_64-multilib-linux-musl
+          - x86_64-w64-mingw32
     steps:
       - name: Checkout
         uses: actions/checkout@v4
