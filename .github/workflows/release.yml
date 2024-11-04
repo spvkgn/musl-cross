@@ -31,10 +31,11 @@ jobs:
           rm -rf release
           printf "| %s | %s |\n" Filename "sha256sum" --- --- > body.txt
           for i in *.tar.xz ; do
-            printf "| %s | %s |\n" "$i" $(sha256sum $i | awk '{print $1}') >> body.txt
+            printf "| %s | %s |\n" "$i" $(sha256sum $i | tee -a sha256sums.txt | awk '{print $1}') >> body.txt
           done
 
       - name: Delete existing release
+        if: false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -50,3 +51,4 @@ jobs:
           body_path: body.txt
           files: |
             *.tar.xz
+            sha256sums.txt
