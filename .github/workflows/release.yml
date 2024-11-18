@@ -2,6 +2,23 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      delete_release:
+        description: 'Delete existing release?'
+        required: true
+        default: 'no'
+        type: choice
+        options:
+        - yes
+        - no
+      prerelease:
+        description: 'Pre-release'
+        required: true
+        default: 'no'
+        type: choice
+        options:
+        - yes
+        - no
 
 jobs:
   release:
@@ -21,32 +38,31 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: release
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ env.RUN_ID }}
+          merge-multiple: true
 
       - name: Generate checksums
         run: |
-          find ./release -type f -name '*.tar.xz' -exec mv {} . \;
-          rm -rf release
-          printf "| %s | %s |\n" Filename "sha256sum" --- --- > body.txt
+          printf "| %s | %s |\n" Filename sha256sum --- --- > body.txt
           for i in *.tar.xz ; do
-            printf "| %s | %s |\n" "$i" $(sha256sum $i | awk '{print $1}') >> body.txt
+            printf "| %s | %s |\n" "$i" $(sha256sum $i | tee -a sha256sums.txt | awk '{print $1}') >> body.txt
           done
 
       - name: Delete existing release
+        if: inputs.delete_release == 'yes'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete ${{ env.tag_name }} --cleanup-tag -y -R ${{ github.repository }} || true
 
       - name: Upload release assets
-        uses: softprops/action-gh-release@v2
+        uses: ncipollo/release-action@v1
         with:
-          fail_on_unmatched_files: true
-          prerelease: false
-          tag_name: ${{ env.tag_name }}
+          allowUpdates: true
+          prerelease: ${{ inputs.prerelease == 'yes' && 'true' || 'false' }}
+          tag: ${{ inputs.prerelease == 'yes' && env.DATE || env.tag_name }}
+          # commit: ${{ github.sha }}
           name: ${{ env.DATE }}
-          body_path: body.txt
-          files: |
-            *.tar.xz
+          bodyFile: body.txt
+          artifacts: '*.tar.xz,sha256sums.txt'
