@@ -44,7 +44,7 @@ sudo tar -xf ${target}.tar.xz -C /opt/x-tools
 
 ## How to build
 
-Fork this project and create a new release, or build manually:
+Fork this project and run the workflow, or build manually:
 
 ```sh
 ./scripts/make ${target}
