@@ -5,8 +5,8 @@ set -e
 TARGET=$1
 
 # packages
-sudo apt-get update
-sudo apt-get install -y --no-install-recommends \
+sudo apt update -qq
+sudo apt install -y --no-install-recommends \
   automake \
   bison \
   bzip2 \
@@ -63,6 +63,4 @@ ct-ng build
 popd
 
 # tarball
-sudo mv /opt/x-tools/${TARGET} .
-sudo chown -R root:root ${TARGET}
-sudo tar -cJvf ${TARGET}.tar.xz ${TARGET}
+XZ_OPT="-9 -T0" tar -C /opt/x-tools --owner=0 --group=0 --numeric-owner -cJvf ${TARGET}.tar.xz ${TARGET}
