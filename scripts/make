@@ -46,7 +46,7 @@ popd
 if [ ! -e /usr/bin/ct-ng ]; then
     pushd builder
     ./bootstrap
-    ./configure --prefix=/usr
+    CC='ccache gcc' CXX='ccache g++' ./configure --prefix=/usr
     make -j`nproc`
     sudo make install
     popd
